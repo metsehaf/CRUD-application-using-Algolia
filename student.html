@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <!-- <meta http-equiv="Content-Type" content="text/html;charset=utf-8"> -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+  <title>Summer student portal</title>
+  <link rel="stylesheet" type="text/css" media="all" href="style.css">
+ <!--  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+ <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  </head>
+<body>
+  <div id="topbar"><a href="https://sites.google.com/view/toront">Back to Sharp Bus Lines Site</a>
+  </div>
+   <div class="main">
+            <ul class="mainnav">
+                <li class="hassubs"><a href="#">Routes</a>
+                    <ul class="dropdown">
+                        <li class="subs hassubs"><a href="#">Route 1</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                        <li class="subs hassubs"><a href="#">Route 2</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                        <li class="subs hassubs"><a href="#">Route 3</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                        <li class="subs hassubs"><a href="#">Route 4</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                        <li class="subs hassubs"><a href="#">Route 5</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <br style="clear: both;">
+        </div>
+  <div id="w">
+    <div id="content">
+      <h1>Student Info Search</h1>
+      <span title="Add a new student" class="ui-icon ui-icon-plus"></span>
+      <div id="searchfield">
+        <form><input type="text" name="student" class="biginput" id="condition" title="Just start typing and student info will be displayed"autofocus></form>
+      </div><!-- @end #searchfield -->
+      
+      <div id="outputbox">
+        <p id="outputcontent">Choose a student and the results will display here.</p>
+        <ul id="student"></ul>
+        <form>
+          <div>
+            <input class="edit" type="button" value="Edit" />
+            <input class="save" type="button" value="Save"/> 
+            <input class="cancel" type="button" value="Cancel"/>
+            <!-- <button class="w3-btn w3-grey w3-large">Delete<i class="w3-margin-left fa fa-trash"></i></button> -->
+            <!-- <button id="openDlg3">Delete</button>
+            <div id="dialog3" title="Dialog with options" hidden="hidden">
+            <p>Please Enter your pass code and click Yes!</p>
+            <input id='tuts' type='text'>
+            </div> -->
+            </div>
+        </form>
+      </div>
+    </div><!-- @end #content -->
+  </div><!-- @end #w -->
+  <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
+  <script type="text/javascript" src="js/student.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+    // var myId = $("#id").val();
+                          // Confirmation of deletion
+                          $( document ).tooltip();
+                          // function tempAlert(msg,duration)
+                          //     {
+                          //          var el = document.createElement("div");
+                          //          el.setAttribute("style","position:absolute;top:10%;left:10%;font-size:3em;background-color:red;color:white;");
+                          //          el.innerHTML = msg;
+                          //          setTimeout(function(){
+                          //           el.parentNode.removeChild(el);
+                          //          },duration);
+                          //          document.body.appendChild(el);
+                          //     }
+                          //     //create id global variable to hold student id, useful when deleting student
+                          //     //record from Algolia
+                          var id = "";
+                          var nom = "";
+                          // //initialize Algolia, I am using the app-id to delete records from Algolia
+                          // //but I don't recommend it, create the CRUD functionality using Python or Ruby
+                          var client = algoliasearch('APP-ID', 'Search-API');
+                          var index = client.initIndex('students');
+                           autocomplete('#condition',
+                            { hint: false }, [
+                              {
+                            source: autocomplete.sources.hits(index, {hitsPerPage: 5}),
+                            //value to be displayed in input control after user's suggestion selection
+                            displayKey: 'StudentName',
+                            //hash of templates used when rendering dataset
+                            templates: {
+                                //'suggestion' templating function used to render a single suggestion
+                                suggestion: function(suggestion) {
+                                    // return suggestion.objectID;
+                                }
+                              }
+                            }
+                            ]).on('autocomplete:selected', function(event, suggestion, dataset) {
+                              id = suggestion.objectID;
+                              nom = suggestion.StudentName;
+                              console.log(suggestion.objectID);
+
+                              });
+                            // function del(){
+                            //     index.deleteObject(id, function(err, content) {
+                            //         if (err) throw err;
+                                                        
+                            //         console.log(content);
+                            //         });
+                            //     }   
+    //          //create pop-up dialog to confirm student deletion     
+                  
+    // $(function () {
+    //           $( "#dialog3" ).dialog({
+    //             autoOpen: false,
+    //             closeOnEscape: false,
+    //             draggable: false,
+    //             modal: true,
+    //             buttons: [
+    //                 {
+    //                     text: "Yes",
+    //                     click: function () {
+    //                       var user = $('#tuts').val();
+    //                       if(user === '2865'){
+    //                         del();
+    //                       $("#student").empty();
+    //                       $(".bgimg").empty();
+    //                       $(this).dialog("close");
+    //                       tempAlert(nom + " has been deleted",2000);
+    //                       }else if(user !== '2865'){
+    //                         $('#dialog3').append("Ask planner to give you code,<br> or make a comment on the side of the student info on route page to remove the student. Thank you!!!");
+    //                         $(this).dialog("close");
+    //                       }
+    //                     }
+    //                 },
+    //                 {
+    //                   text: "No",
+    //                   click: function(){
+    //                     $(this).dialog("close");
+    //                   }
+    //                 }
+    //             ]
+    //           });
+    //           $("#openDlg3").click(function() {
+    //             $("#dialog3").dialog("open");
+    //             return false
+    //         });
+
+    //       });
+
+     $('.ui-icon-plus').click(function() {
+        window.location.href = 'newstudent.html';
+      });  
+ </script>
+</body>
+</html>

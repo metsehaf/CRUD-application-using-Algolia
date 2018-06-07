@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+ <!--  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"> -->
+  <title>Summer student portal</title>
+  <link rel="stylesheet" type="text/css" media="all" href="style.css">
+ <!--  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+ <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  </head>
+<body>
+  <div id="topbar"><a href="https://sites.google.com/view/toront">Back to Sharp Bus Lines Site</a>
+  </div>
+  <table class="hop">
+    <tbody>
+      <tr>
+        <td><button id="search" type="button"><a href="student.html">﻿Search portal</button>
+        </td>
+        <td><button id="return" type="button"><a href="javascript:history.go(-1)"onMouseOver="self.status.referrer;return true">﻿<< Return</button>
+        </td>
+        <td><span title="Print Route copy" class="ui-icon ui-icon-print" onclick="window.print();"> 
+        </td>
+        <td>
+          <div class="main">
+            <ul class="mainnav">
+                <li class="hassubs"><a href="#">Routes</a>
+                    <ul class="dropdown">
+                        <li class="subs hassubs"><a href="#">Route 1</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                        <li class="subs hassubs"><a href="#">Route 2</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                        <li class="subs hassubs"><a href="#">Route 3</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                        <li class="subs hassubs"><a href="#">Route 4</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                        <li class="subs hassubs"><a href="#">Route 5</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <br style="clear: both;">
+        </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div id="w">
+    <div id="content">
+    <form>
+  Student name:<br>
+  <input id="name" type="text" name="Student name">
+  <br><br>
+  Home Address:<br>
+  <input id="address" type="text" name="Home Address">
+  <br><br>
+  City:<br>
+  <input id="city" type="text" name="City">
+  <br><br>
+   Drop off:<br>
+  <input id="dropoff" type="text" name="Drop off">
+  <br><br>
+  Contact at School:<br>
+  <input id="school" type="text" name="Contact at School">
+  <br><br>
+  Contact at Home:<br>
+  <input id="phone" type="text" name="Contact at Home">
+  <br><br>
+  Start Date:<br>
+  <input id="startDate" type="date"name="Start Date">
+  <br><br>
+  PickupTime:<br>
+  <input id="pickup" type="time" name="PickupTime">
+  <br><br>
+  End Date:<br>
+  <input id="endDate" type="date" name="End Date">
+  <br><br>
+  <input id="submit" type="button" value="Submit">
+  <input type="reset">
+</form>
+  </div>
+</div>
+  <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
+  <script type="text/javascript" src="js/student.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script type="text/javascript">
+    // var myId = $("#id").val();
+                          // Confirmation of deletion
+                          $( document ).tooltip();
+                          var input = $( "input:reset" ).css({
+                            background: "yellow",
+                            border: "3px red solid"
+                          });
+                          //Confirmation of update
+                          function updateAlert(msg,duration)
+                              {
+                                   var el = document.createElement("div");
+                                   el.setAttribute("style","position:absolute;top:70%;left:10%;font-size:3em;background-color:green;color:white;");
+                                   el.innerHTML = msg;
+                                   setTimeout(function(){
+                                    el.parentNode.removeChild(el);
+                                   },duration);
+                                   document.body.appendChild(el);
+                              }
+                      var client = algoliasearch('4WXFSMU72L', 'd01dbed1228630b91c0f312d81b98718');
+                      var index = client.initIndex('students');
+
+        
+          //Save the new stop Click event
+       $('#submit').click(function() {
+        var $name = $("#name").val();
+        var $phone = $("#phone").val();
+        var $adress = $("#address").val();
+        var $city = $("#city").val();
+        var $drop = $("#dropoff").val();
+        var $pickup = $("#pickup").val();
+        var $school = $("#school").val();
+        var $startDate = $("#startDate").val();
+        var $endDate = $("#endDate").val();
+        index.addObject({
+          StudentName: $name,
+          HomeAddress: $adress,
+          Dropoff: $drop,
+          City: $city,
+          PickupTime: $pickup,
+          ContactatHome: $phone,
+          StartDate: $startDate,
+          EndDate: $endDate,
+          ContactatSchool: $school
+        }, function(err, content) {
+          console.log(content);
+        });
+        updateAlert("Thank you for submitting the new student " + "<br>" + $name + "'s profile has been added ",5000);
+      });  
+
+ </script>
+</body>
+</html>

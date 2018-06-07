@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <!-- <meta http-equiv="Content-Type" content="text/html;charset=utf-8"> -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+  <title>Summer student portal <code>setPanel()</code></title>
+  <link rel="stylesheet" type="text/css" media="all" href="style.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+</head>
+
+<body>
+  <div id="topbar"><a href="https://sites.google.com/view/toront">Back to Sharp Bus Lines Site</a>
+  </div>
+  <table class="hop">
+    <tbody>
+      <tr id="nav">
+        <td><button id="search" type="button"><a href="student.html">﻿Search portal</button>
+        </td>
+        <td><button id="return" type="button"><a href="javascript:history.go(-1)"onMouseOver="self.status.referrer;return true">﻿<< Return</button>
+        </td>
+        <td><span title="Print Route copy" class="ui-icon ui-icon-print" onclick="window.print();"> 
+        </td>
+        <td><!-- <input id="submit" type="submit" value="Get Directions"> -->
+        <button title="Highly suggested if you want to view directions" id="openDlg3">View Directions here</button>
+            <div id="dialog3" title="Maps with directions" hidden="hidden">
+            <div id="right-panel" style="width:50%;"></div>
+            <div id="map" style="width:50%; height: 400px"></div>
+            </div> 
+        </td>
+        <td>
+          <div class="main">
+            <ul class="mainnav">
+                <li class="hassubs"><a href="#">Routes</a>
+                    <ul class="dropdown">
+                        <li class="subs hassubs"><a href="#">Route 1</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                        <li class="subs hassubs"><a href="#">Route 2</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                        <li class="subs hassubs"><a href="#">Route 3</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                        <li class="subs hassubs"><a href="#">Route 4</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                        <li class="subs hassubs"><a href="#">Route 5</a>
+                            <ul class="dropdown">
+                                <li class="subs"><a href="Route1.html">AM</a></li>
+                                <li class="subs"><a href="Route2.html">PM</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <br style="clear: both;">
+        </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <center>
+  <table id="tbl" style="border-bottom: 1px solid #ccc;">
+    <div class="stop"><font size="3"><b>Route: 1  -  In  Bound</b></font>
+  </div>
+    <thead>
+      <tr>
+        <th id="objid">id</th>
+        <th>Pick-up time</th>
+        <th>Student Name</th>
+        <th>Home Address</th>
+        <th>Drop off</th>
+        <th>Contact at Home</th>
+       </tr>
+    </thead>
+    <br></br>
+    <tbody id="tbdata">
+      <tr class="school" style="background-color: green;color: white;">
+        <td>9:00 AM</td>
+        &nbsp;
+        <td>St. Dominic Savio Catholic School</td>
+        &nbsp;
+        <td>50 Tideswell Blvd, Toronto</td>
+      </tr>
+    </tbody>
+  </table>
+</center>
+</div>
+    </div>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+                        $( document ).tooltip();
+
+                        var $TABLE = $('#table');
+                          // Confirmation of deletion
+                          function tempAlert(msg,duration)
+                              {
+                                   var el = document.createElement("div");
+                                   el.setAttribute("style","position:absolute;top:10%;left:10%;font-size:3em;background-color:red;color:white;");
+                                   el.innerHTML = msg;
+                                   setTimeout(function(){
+                                    el.parentNode.removeChild(el);
+                                   },duration);
+                                   document.body.appendChild(el);
+                              }
+                          //Confirmation of update
+                          function updateAlert(msg,duration)
+                              {
+                                   var el = document.createElement("div");
+                                   el.setAttribute("style","position:absolute;top:10%;left:10%;font-size:3em;background-color:green;color:white;");
+                                   el.innerHTML = msg;
+                                   setTimeout(function(){
+                                    el.parentNode.removeChild(el);
+                                   },duration);
+                                   document.body.appendChild(el);
+                              }
+     //initialize Alglolia to get objects/individual student data
+        var client = algoliasearch('APP-ID', 'Admin-API');
+        var index = client.initIndex('students');
+        $(document).ready(function () {
+        index.getObjects(['7718911', '7718901', '7718891', '7718881', '7718871'], function(err, content) {
+          if (err) throw err;
+        // var thehtml = $("#tbdata");
+        // thehtml.append('<td>'+content.StudentName + '</td> <td> ' + content.HomeAddress + ' </td><td>' + content.Dropoff +'</td> + <td>' + content.ContactatHome +'</td>');
+        //   $.each(content, function (key, item) {
+        //   html += formatItem(item); 
+        //    });
+        console.log(content);
+        var $tblbody = $('#tbdata');
+        students = content.results;
+        for (var i = 0; i < students.length; i++){
+          var student = students[i];
+          // $tblbody.append('<td>'+student.StudentName + '</td> <td> ' + student.HomeAddress + ' </td><td>' + student.Dropoff +'</td> + <td>' + student.ContactatHome +'</td>');
+            
+          $('<tr>', { html: '<td id="obj">'+student.objectID + '</td><td id="tim">'+student.StartTime + '</td><td id="name">'+student.StudentName + '</td> <td id="add"> ' + student.HomeAddress + ' </td><td id="drop">' + student.Dropoff +'</td><td id="cell">' + student.ContactatHome +'</td>' + '<td><input class="edit" type="button" value="Edit"/><input class="save" type="button" value="Save"/><input class="cancel" type="button" value="Cancel"/></td>'}).prependTo($("#tbdata")).css('border', '3px solid black');
+
+
+          //open directions in google maps
+    var $nav = $('#nav');
+    var waypts = [];
+        var city = ",Toronto";
+        $('#tbdata tr:gt(0):lt(-1)').not([0]).each(function(){
+          var $wptArray = $(this).find('td:eq(3)').html() + '%7C';
+          waypts.push($wptArray);
+        });
+        var start = student.HomeAddress;
+        var end = $('.school').find('td:gt(1)').html();
+
+        $nav.append('<a title="Highly suggested if you want to print directions" href="https://www.google.com/maps/dir/?api=1&origin=' + start + '&destination=' + end + '&travelmode=driving&waypoints=' + waypts +'" target="_blank" class="btn">View directions on google maps</a>');
+        };
+                  //edit click event
+  $(document).on("click", ".edit", function(){
+    $(this).hide();
+    $(this).closest('tr').find("td:lt(6)").addClass('editable');
+    $(this).closest('tr').find("td:lt(6)").attr('contenteditable', 'true'); 
+    $(this).siblings('.save, .cancel').show();
+  });
+//cancel click event
+$(document).on("click", ".cancel", function(){
+    $(this).siblings('.edit').show();
+    $(this).siblings('.save').hide();
+    $(this).closest('tr').find("td:lt(6)").removeClass('editable');
+    $(this).closest('tr').find("td:lt(6)").removeAttr('contenteditable'); 
+    $(this).hide();
+  });
+
+   function updateAlert(msg,duration)
+                              {
+                                   var el = document.createElement("div");
+                                   el.setAttribute("style","position:absolute;top:80%;left:10%;font-size:3em;background-color:green;color:white;");
+                                   el.innerHTML = msg;
+                                   setTimeout(function(){
+                                    el.parentNode.removeChild(el);
+                                   },duration);
+                                   document.body.appendChild(el);
+                              }
+
+
+   function update(){
+                              var $obj = $("#obj").html();
+                              var $name = $("#name").html();
+                              var $time = $("#tim").html();
+                              var $adress = $("#add").html();
+                              var $drop = $("#drop").html();
+                              var $cell = $("#cell").html()
+                              var client = algoliasearch('4WXFSMU72L', 'd01dbed1228630b91c0f312d81b98718');
+                              var index = client.initIndex('students');
+                              index.partialUpdateObject({
+                              StudentName: $name,
+                              objectID: $obj,
+                              ContactatHome: $cell,
+                              HomeAddress: $adress,
+                              Dropoff: $drop,
+                              StartTime: $time
+                            }, function(err, content) {
+                              if (err) throw err;
+
+                              console.log(content);
+                            });
+                            }
+  //save click event
+  $(document).on("click", ".save", function(){
+    update();
+    var nom = $(this).closest('tr').find("td:eq(2)").text();
+    $(this).siblings('.edit').show();
+    $(this).siblings('.cancel').hide();
+    $(this).closest('tr').find("td:lt(6)").removeClass('editable');
+    $(this).closest('tr').find("td:lt(6)").removeAttr('contenteditable'); 
+    $(this).hide();
+    updateAlert(nom + "'s information has been updated",3000);
+  });
+        });
+ 
+        });
+
+    
+          //open map in jquery-ui dialog
+    $(function () {
+              $( "#dialog3" ).dialog({
+                autoOpen: false,
+                closeOnEscape: true,
+                draggable: false,
+                modal: true,
+                height: 700,
+                width: 1200,
+                buttons: [
+                    {
+                      text: "Close",
+                      click: function(){
+                        $(this).dialog("close");
+                      }
+                    }
+                ]
+              });
+              $("#openDlg3").click(function() {
+                $("#dialog3").dialog("open");
+                return false
+            });
+
+          });
+      </script>
+      <script type="text/javascript" src="js/student.js"></script>
+    <script src="https://form.jotform.com/static/feedback2.js" type="text/javascript">
+      new JotformFeedback({
+        formId: "81509096884267",
+        buttonText: "Feedback",
+        base: "https://form.jotform.com/",
+        background: "#F59202",
+        fontColor: "#FFFFFF",
+        buttonSide: "left",
+        buttonAlign: "center",
+        type: false,
+        width: 700,
+        height: 500,
+        isCardForm: false
+      });
+    </script>
+       <script async defer
+    src="https://maps.googleapis.com/maps/api/js?libraries=places&key=API-key&callback=initMap">
+    </script>
+</body>
+</html>
